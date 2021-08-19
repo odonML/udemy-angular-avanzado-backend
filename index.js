@@ -5,15 +5,13 @@ const {dbConection} = require("./database/config"); //Conexion
 
 const app = express();  //Creamos Express Aplication
 app.use(cors()); // Middleware de Cors
+app.use(express.json());
 
 dbConection(); // Conexion a BD
-//Ruta get '/'
-app.get('/', (req,res)=>{
-    res.status(400).json({
-        ok: true,
-        msj: 'Todo salio bien'
-    })
-})
+//Rutas '/'
+app.use('/api/usuarios', require('./routes/usuarios.routes'))
+app.use('/api/login', require('./routes/auth.routes'))
+
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
     console.log("Hola mundo",PORT);
