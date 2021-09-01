@@ -1,112 +1,111 @@
-const Usuario = require("../models/usuario.models");
-const bcrypt = require("bcryptjs");
-const { generarJWT } = require("../helpers/jwt.helpers");
-
-const getUsuarios = async (req, res) => {
-  const usuarios = await Usuario.find({}, "nombre email google role img");
-  res.json({
+const Usuario = require("../models/usuario.models"); //Importacion de Nuestro Modelo
+const bcrypt = require("bcryptjs"); //Importacion de libreria para encriptar contraseña
+const { generarJWT } = require("../helpers/jwt.helpers"); //Importacion de generador de Token
+// ------------------------GET--------------------------------------
+const getUsuarios = async (req, res) => { //Funcion para obtener usuarips
+  const usuarios = await Usuario.find({}, {_id: 0, nombre:1}); //Peticion para obtener los usuarios de la base de datos
+  res.json({  //Respuesta de la peticion
     ok: true,
-    usuarios,
-    id: req.id
+    usuarios, //Resultado de peticion a la base de datos
+    id: req.id //id del usuario que realizo la peticion
   });
 };
-
-const crearUsaurio = async (req, res) => {
-  const { password, email } = req.body;
-  try {
-    const existeEmail = await Usuario.findOne({ email });
-    if (existeEmail) {
-      return res.status(400).json({
+// -------------------------POST-------------------------------------
+const crearUsaurio = async (req, res) => { //Funcion para crear un usuario
+  const { password, email } = req.body; //Extraemos password y email del cuerpo de la peticion
+  try { //En caso de que la promesa se cumpla
+    const existeEmail = await Usuario.findOne({ email }); //Busqueda en base a el email de la peticion
+    if (existeEmail) { //Validacion de email en dado caso que ya exista un usuario con ese email
+      return res.status(400).json({ //Retorna una respuesta con estatus 400
         ok: false,
-        msj: "el correo ya esta registrado",
+        msj: "el correo ya esta registrado", //Mensaje de respuesta
       });
     }
-    const usuario = new Usuario(req.body);
+    const usuario = new Usuario(req.body); //Instancia del Modelo con el cuerpo de la peticion
+
+    // ---------------------------------------------------------------------------------------
     //emcriptacion de password
-    const salt = bcrypt.genSaltSync();
-    usuario.password = bcrypt.hashSync(password, salt);
-    //guardar usuario
-    await usuario.save();
-    // generar JWT
-    const token = await generarJWT(usuario.id)
-    res.json({
+    const salt = bcrypt.genSaltSync(); //
+    usuario.password = bcrypt.hashSync(password, salt); //
+    // ---------------------------------------------------------------------------------------
+
+    await usuario.save();  //guardar usuario en la base de datos
+    const token = await generarJWT(usuario.id); //Funcion que genera JWT
+    res.json({ //Respuesta con los datos del usuario y su token
       ok: true,
-      usuario,
-      token
+      usuario, //Datos del usuario
+      token //Token
     });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({
+  } catch (err) { //En caso de que la promesa falle
+    console.log(err); //Impresion en consola del error
+    res.status(500).json({//Respuesta con estatus 560
       ok: false,
-      msj: "algo salio mal revisa los logs",
+      msj: "algo salio mal revisa los logs", //Mensaje de la respuesta 
     });
   }
 };
-
-const actualizarUsuario = async (req, res) => {
-    const id = req.params.id;
-  try {
-      const usuarioID = await Usuario.findById(id);
-      if(!usuarioID){
-          return res.status(404).json({
+// --------------------------UPDATE------------------------------------
+const actualizarUsuario = async (req, res) => { //Funcion para Actualizar Usuario
+    const id = req.params.id; //Obtenemos el id pasado por parametros de la peticion (/:id)
+  try { //En caso que la promesa se cumpla
+      const usuarioID = await Usuario.findById(id); //Busqueda de usuario con el ID para verificar que ID sea valido
+      if(!usuarioID){ //Validacion de usuario en dado caso que un usuario no sea encontrado mediante la ID
+          return res.status(404).json({ //Respuesta con estatis 404
               ok: false,
-              msj: 'el usuario no existe'
+              msj: 'el usuario no existe' //Mensaje de la respuesta
           })
       }
       //actualizaciones
-      const {password, email, google, ...campos} = req.body;
-      if(usuarioID.email !== email ){
-          const existeEmail = await Usuario.findOne({email});
-          if(existeEmail){
-              res.status(400).json({
+      const {password, email, google, ...campos} = req.body; //Desestrucuramos de el cuerpo de la peticion
+      if(usuarioID.email !== email ){ //Validacion si es que cambiamos el email
+          const existeEmail = await Usuario.findOne({email}); //Realizamos una busqueda de un usuario en base a el email
+          if(existeEmail){ //Validacion en base a la busqueda de el usuario
+              res.status(400).json({//Respuesta con estatus 400
                   ok: false,
-                  msj: 'Este correo ya existe'
+                  msj: 'Este correo ya existe'//Mensaje de la respuesta
               })
           }
       }
-      campos.email = email;
-
-      const usuarioActualizado = await Usuario.findByIdAndUpdate(id, campos, {new: true});
-
-      res.json({
+      campos.email = email; //Asignacion de email en el objeto
+      const usuarioActualizado = await Usuario.findByIdAndUpdate(id, campos, {new: true});//Actualizacion de los datos
+      res.json({//Respuesta satisfactoria
           ok: true,
-          usuarioActualizado
+          usuarioActualizado//Usuario actualizado
       })
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({
+  } catch (err) {//En caso que la promesa falle
+    console.log(err);//Impresion en consola del error
+    res.status(500).json({//Respuesta con estatus 500
       ok: false,
-      msj: "Error en la actualizacion",
+      msj: "Error en la actualizacion", //Mensaje de la respuesta
     });
   }
 };
-
-const eliminarUsuario = async (req, res) => {
-    const id = req.params.id;
-
-    try{
-        const usuarioID = await Usuario.findById(id);
-        if(!usuarioID){
-            return res.status(404).json({
+// --------------------------DELETE------------------------------------
+const eliminarUsuario = async (req, res) => {//Funcion para eliminar usuario
+    const id = req.params.id;//Obtenemos el ID pasado por parametro en la peticion (/:id)
+    try{//En caso que la promesa se cumpla
+        const usuarioID = await Usuario.findById(id);//Verificamos que exista un usuario con ese ID
+        if(!usuarioID){ //Validacion si el usuario no existe
+            return res.status(404).json({ //Respuesta con estatus 404
                 ok: false,
-                msj: 'el usuario no existe'
+                msj: 'el usuario no existe'//Mensaje de la respuesta
             })
         }
-        await Usuario.findByIdAndDelete(id);
-        res.json({
+        await Usuario.findByIdAndDelete(id); //Eliminacion del usuario en base al ID
+        res.json({ //Respuesta de eliminacion
             ok: true,
-            msj: 'Registro eliminado'
+            msj: 'Registro eliminado'//Mensaje de la respuesta
         });
-    }catch(err){
-        console.log(err);
-        res.status(500).json({
+    }catch(err){//En dado caso que la promesa falle
+        console.log(err); //Imprecion en consola del error
+        res.status(500).json({ //Respuesta con estatus 500
             ok: false,
-            msj: 'erro en la peticion'
+            msj: 'erro en la peticion'//Mensaje de la respuesta
         })
     }
 }
 
-module.exports = {
+module.exports = { //Exportamos las Funciones
   getUsuarios,
   crearUsaurio,
   actualizarUsuario,
