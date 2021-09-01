@@ -1,23 +1,23 @@
-const mongoose = require("mongoose");
-require("dotenv").config();
+const mongoose = require("mongoose"); //Importamos Mongoose
+require("dotenv").config(); //Variables de entorno
 
-const DB = process.env.DB_CNN;
-const dbConection = async () => {
+const DB = process.env.DB_CNN; //Variable de entorno, URL de conexion
+const dbConection = async () => {//Funcion de conexion
   try {
-    mongoose.connect(
-      DB,
+    mongoose.connect( //Conexion a la mongoDB
+      DB, //Variable de entorno
       {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true,
+        useNewUrlParser: true, //Analizador de cadenas de conexion
+        useUnifiedTopology: true, //Deteccion y supervision de servidor
+        useCreateIndex: true, //Generador de indices
       }
     );
-    console.log("DB Online");
+    console.log("DB Online");//Mensaje de conexion
   } catch (err) {
-    console.log(err);
+    console.log(err); //Menasje de error
   }
 };
 
-module.exports={
-    dbConection
-}
+module.exports={ //Exportacion de funciones
+    dbConection //Funcion que realiza la conexion
+}; 
