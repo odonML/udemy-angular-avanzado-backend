@@ -1,6 +1,7 @@
 const Usuario = require("../models/usuario.models"); //Importacion de Nuestro Modelo
 const bcrypt = require("bcryptjs"); //Importacion de libreria para encriptar contraseña
 const { generarJWT } = require("../helpers/jwt.helpers"); //Importacion de generador de Token
+
 // ------------------------GET--------------------------------------
 const getUsuarios = async (req, res) => { //Funcion para obtener usuarips
   const usuarios = await Usuario.find({}, {_id: 0, nombre:1}); //Peticion para obtener los usuarios de la base de datos
@@ -10,6 +11,7 @@ const getUsuarios = async (req, res) => { //Funcion para obtener usuarips
     id: req.id //id del usuario que realizo la peticion
   });
 };
+
 // -------------------------POST-------------------------------------
 const crearUsaurio = async (req, res) => { //Funcion para crear un usuario
   const { password, email } = req.body; //Extraemos password y email del cuerpo de la peticion
@@ -25,8 +27,8 @@ const crearUsaurio = async (req, res) => { //Funcion para crear un usuario
 
     // ---------------------------------------------------------------------------------------
     //emcriptacion de password
-    const salt = bcrypt.genSaltSync(); //
-    usuario.password = bcrypt.hashSync(password, salt); //
+    const salt = bcrypt.genSaltSync(); //Salt son las bueltas que dara el hash para encriptar el password
+    usuario.password = bcrypt.hashSync(password, salt); //hasheamos nustro password
     // ---------------------------------------------------------------------------------------
 
     await usuario.save();  //guardar usuario en la base de datos
@@ -44,6 +46,7 @@ const crearUsaurio = async (req, res) => { //Funcion para crear un usuario
     });
   }
 };
+
 // --------------------------UPDATE------------------------------------
 const actualizarUsuario = async (req, res) => { //Funcion para Actualizar Usuario
     const id = req.params.id; //Obtenemos el id pasado por parametros de la peticion (/:id)
@@ -80,6 +83,7 @@ const actualizarUsuario = async (req, res) => { //Funcion para Actualizar Usuari
     });
   }
 };
+
 // --------------------------DELETE------------------------------------
 const eliminarUsuario = async (req, res) => {//Funcion para eliminar usuario
     const id = req.params.id;//Obtenemos el ID pasado por parametro en la peticion (/:id)

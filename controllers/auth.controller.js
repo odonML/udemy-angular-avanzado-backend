@@ -12,7 +12,6 @@ const login = async (req, res) => { //Funcion para hacer login
                 msj: 'Email no encontrado'//Mensaje de la respuesta
             })
         }
-
         const validPassword = bcrypt.compareSync(password, usuarioDB.password);//Verificacion de el password encriptado
         if(!validPassword){ //Validacion en base a la comparacion
             res.status(400).json({//Respuesta con estatus 400
@@ -20,14 +19,12 @@ const login = async (req, res) => { //Funcion para hacer login
                 msj: 'Password no es valido'//Mensaje de la respuesta
             });
         }
-
         // generar JWT
         const token = await generarJWT(usuarioDB.id);//Funcion que genera el JWT
         res.json({//Respuesta con el JWT generado
             ok: true,
             token // JWT
         })
-
     }catch(err){//En caso que la promesa falle
         console.log(err);//Impresion en consola del error
         res.status(500).json({//Respuesta con estatus 500
