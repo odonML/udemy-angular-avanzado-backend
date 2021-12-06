@@ -4,7 +4,7 @@ const { generarJWT } = require("../helpers/jwt.helpers"); //Importacion de gener
 
 // ------------------------GET--------------------------------------
 const getUsuarios = async (req, res) => { //Funcion para obtener usuarips
-  const usuarios = await Usuario.find({}, {_id: 0, nombre:1}); //Peticion para obtener los usuarios de la base de datos
+  const usuarios = await Usuario.find({}, {_id: 0, nombre:1, email:1}); //Peticion para obtener los usuarios de la base de datos
   res.json({  //Respuesta de la peticion
     ok: true,
     usuarios, //Resultado de peticion a la base de datos

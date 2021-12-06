@@ -1,6 +1,7 @@
 /*
- * Ruta: /api/usuarios
- */
+* Usuarips
+* Ruta: /api/usuarios
+*/
 const { Router } = require("express"); //Router para la creacion de controladores de rutas
 const { check } = require("express-validator"); //Validacion campos
 const { validarCampos } = require("../middleware/validar-campos"); //Funcion que validara campos
