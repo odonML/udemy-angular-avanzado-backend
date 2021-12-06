@@ -1,0 +1,1 @@
+const Medicos = require("../models/medicos.model");
