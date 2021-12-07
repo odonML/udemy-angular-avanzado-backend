@@ -21,6 +21,7 @@ router.post(
     [
         validarJWT,
         check("nombre", "el nombre del medico es necesario").not().isEmpty(),
+        check("hospital","el hospital id tiene que ser valido").isMongoId(),
         validarCampos
     ],
     controller.addMedico
