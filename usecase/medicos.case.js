@@ -1,7 +1,7 @@
 const Medicos = require("../models/medicos.model");
 
 const getMedicosDB = async () =>{
-    const data = await Medicos.find({}, {_id: 0, nombre:1});
+    const data = await Medicos.find({}, {_id: 0, nombre:1}).populate("usuario", "nombre img").populate("hospital", "nombre");
     return data;
 }
 const postMedicoDB = async (data) =>{
