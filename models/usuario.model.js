@@ -15,7 +15,8 @@ const UsuarioSchema = new Schema({ //Schema: Define la forma o estrucctura de lo
         required: true
     },//Definicion de Campo
     img:{
-        type: String
+        type: String,
+        default: "imagen",
     },//Definicion de Campo
     role:{
         type: String,

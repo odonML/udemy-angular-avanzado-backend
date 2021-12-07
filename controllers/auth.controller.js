@@ -1,4 +1,4 @@
-const Usuario = require('../models/usuario.models'); //Importamos el modelo
+const Usuario = require('../models/usuario.model'); //Importamos el modelo
 const bcrypt = require("bcryptjs"); //Importamos libreria para encriptar password
 const { generarJWT } = require('../helpers/jwt.helpers'); //Importamos la funcion que genera el JWT
 

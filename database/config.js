@@ -12,7 +12,7 @@ const dbConection = async () => {//Funcion de conexion
         useCreateIndex: true, //Generador de indices
       }
     );
-    console.log("DB Online");//Mensaje de conexion
+    console.log("DB connect");//Mensaje de conexion
   } catch (err) {
     console.log(err); //Menasje de error
   }
