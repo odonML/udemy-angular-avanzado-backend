@@ -1,7 +1,7 @@
 const Hospital = require("../models/hospital.model");
 
 const getHospitalesDB = async () => {
-    const hospital = await Hospital.find({});
+    const hospital = await Hospital.find({}, {_id: 0, usuario: 0});
     return hospital;
 };
 const postHospitalDB = async (data) => {

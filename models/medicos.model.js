@@ -16,7 +16,7 @@ const MedicoSchema = new Schema({ //Schema para los documentos de la coleccion d
         type: Schema.Types.ObjectId,
         ref: "Hospital"
     }
-}, {collection: "Medicos"}); //cambio de nombre para colleccion y que no diga "hospitals"
+}, {collection: "medicos"}); //cambio de nombre para colleccion y que no diga "hospitals"
 
 MedicoSchema.method('toJSON',function(){
     const {__v, _id, ...object} = this.toObject();
