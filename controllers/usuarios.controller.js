@@ -3,11 +3,13 @@ const cases = require("../usecase/usuario.case"); //Casos de uso
 
 // ------------------------GET--------------------------------------
 const getUsuarios = async (req, res) => { //Funcion para obtener usuarips
-  const usuarios = await cases.getAllUsuariosDB();
+  const desde = Number(req.query.desde) || 0;
+  const [usuarios, total] = await cases.getAllUsuariosDB(desde);
   res.json({  //Respuesta de la peticion
     ok: true,
     usuarios, //Resultado de peticion a la base de datos
-    id: req.id //id del usuario que realizo la peticion
+    id: req.id,  //id del usuario que realizo la peticion
+    total,
   });
 };
 

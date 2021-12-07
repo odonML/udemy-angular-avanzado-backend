@@ -1,9 +1,12 @@
 const Usuario = require("../models/usuario.model");
 const bcrypt = require("bcryptjs"); //Importacion de libreria para encriptar contraseña
 
-const getAllUsuariosDB = async () =>{
-    const allUsuarios = await Usuario.find({}, {_id: 0, nombre:1, email:1}); //Peticion para obtener los usuarios de la base de datos
-    return allUsuarios;
+const getAllUsuariosDB = async (desde) =>{//Peticion para obtener los usuarios de la base de datos
+    const peticiones = await Promise.all([
+        Usuario.find({}, {_id: 0, nombre:1, email:1}).skip(desde).limit(5),
+        Usuario.count()
+    ])
+    return peticiones;
 }
 const addUsuarioDB = async ({password, ...data}) =>{
     const usuario = new Usuario(data) //Instancia del Modelo con el cuerpo de la peticion
